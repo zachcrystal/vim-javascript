@@ -26,13 +26,16 @@ syntax case match
 
 syntax match   jsNoise          /[:,;]/
 syntax match   jsDot            /\./ skipwhite skipempty nextgroup=jsObjectProp,jsFuncCall,jsPrototype,jsTaggedTemplate
+syntax match   jsFuncDot        /\./ skipwhite skipempty nextgroup=jsObjectProp,jsFuncCall,jsPrototype,jsTaggedTemplate
 syntax match   jsObjectProp     contained /\<\K\k*/
 syntax match   jsFuncCall       /\<\K\k*\ze\s*(/
 syntax match   jsParensError    /[)}\]]/
+syntax match   jsStaticFunc     contained /\<\u\k*/ nextgroup=jsFuncDot
 
 " Program Keywords
-syntax keyword jsStorageClass   const var let skipwhite skipempty nextgroup=jsDestructuringBlock,jsDestructuringArray,jsVariableDef
-syntax match   jsVariableDef    contained /\<\K\k*/ skipwhite skipempty nextgroup=jsFlowDefinition
+syntax keyword jsStorageClass   const var let skipwhite skipempty nextgroup=jsDestructuringBlock,jsDestructuringArray,jsUpperVariableDef,jsLowerVariableDef
+syntax match   jsUpperVariableDef    contained /\<\u\K\k*/ skipwhite skipempty nextgroup=jsFlowDefinition
+syntax match   jsLowerVariableDef    contained /\<\l\K\k*/ skipwhite skipempty nextgroup=jsFlowDefinition
 syntax keyword jsOperatorKeyword delete instanceof typeof void new in of skipwhite skipempty nextgroup=@jsExpression
 syntax match   jsOperator       "[-!|&+<>=%/*~^]" skipwhite skipempty nextgroup=@jsExpression
 syntax match   jsOperator       /::/ skipwhite skipempty nextgroup=@jsExpression
@@ -230,7 +233,7 @@ if exists("javascript_plugin_flow")
   runtime extras/flow.vim
 endif
 
-syntax cluster jsExpression  contains=jsBracket,jsParen,jsObject,jsTernaryIf,jsTaggedTemplate,jsTemplateString,jsString,jsRegexpString,jsNumber,jsFloat,jsOperator,jsOperatorKeyword,jsBooleanTrue,jsBooleanFalse,jsNull,jsFunction,jsArrowFunction,jsGlobalObjects,jsExceptions,jsFutureKeys,jsDomErrNo,jsDomNodeConsts,jsHtmlEvents,jsFuncCall,jsUndefined,jsNan,jsPrototype,jsBuiltins,jsNoise,jsClassDefinition,jsArrowFunction,jsArrowFuncArgs,jsParensError,jsComment,jsArguments,jsThis,jsSuper,jsDo,jsForAwait,jsAsyncKeyword,jsStatement,jsDot
+syntax cluster jsExpression  contains=jsBracket,jsParen,jsObject,jsTernaryIf,jsTaggedTemplate,jsTemplateString,jsString,jsRegexpString,jsNumber,jsFloat,jsOperator,jsOperatorKeyword,jsBooleanTrue,jsBooleanFalse,jsNull,jsFunction,jsArrowFunction,jsGlobalObjects,jsExceptions,jsFutureKeys,jsDomErrNo,jsDomNodeConsts,jsHtmlEvents,jsFuncCall,jsUndefined,jsNan,jsPrototype,jsBuiltins,jsNoise,jsClassDefinition,jsArrowFunction,jsArrowFuncArgs,jsParensError,jsComment,jsArguments,jsThis,jsSuper,jsDo,jsForAwait,jsAsyncKeyword,jsStatement,jsDot,jsStaticFunc
 syntax cluster jsAll         contains=@jsExpression,jsStorageClass,jsConditional,jsRepeat,jsReturn,jsException,jsTry,jsNoise,jsBlockLabel
 
 " Define the default highlighting.
